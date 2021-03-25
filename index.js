@@ -1,11 +1,9 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }))
 
 // Home
 app.get('/', (req, res) => res.send('Haha what are you looking for?'));
@@ -24,7 +22,9 @@ app.post('/show-gif', async (req, res) => {
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
     postToChannel(responseUrl, text);
-    return res.status(200).end();
+    res.json({ user: userID || "user", image: url})
+    res.status(200).end();
+    return res;
   } catch (err) {
     console.error(err);
   }
@@ -32,7 +32,8 @@ app.post('/show-gif', async (req, res) => {
 
 const getUrls = () => ([
   // urls where media files are hosted.
-  'https://res.cloudinary.com/encora/image/upload/v1616698230/baby-sinclair/tenor_xnuzls.gif'
+  'http://gph.is/22eazj7', //bartHappy
+  'http://gph.is/1feNC7w' //dancing
 ]);
 
 const postToChannel = async (responseUrl, text) => {
@@ -46,7 +47,7 @@ const postToChannel = async (responseUrl, text) => {
            It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
     */
     body: JSON.stringify({ text, response_type: 'in_channel' }),
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' }
   });
 }
 
