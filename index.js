@@ -12,7 +12,7 @@ app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 app.post('/show-gif', async (req, res) => {
   try {
     const urls = getUrls();
-    console.log(urls);
+    console.log("urls:", urls);
     const randomIndex = Math.floor(Math.random() * urls.length);
     const url = urls[randomIndex];
 
