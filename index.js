@@ -12,15 +12,15 @@ app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 app.post('/show-gif', async (req, res) => {
   try {
     const urls = getUrls();
-    const randomIndex = Math.floor(Math.random() * urls.length);
-    const url = urls[randomIndex];
+    let randomIndex = Math.floor(Math.random() * urls.length);
+    let url = urls[randomIndex];
 
     /* Slack slash commands have an invocation structure that includes:
         - response_url: a hook/url that a POST request can be sent to for sending, editing or deleting messages
         - user_id: a Slack code that represents the invoking user's Display Name
     */
-    const { response_url: responseUrl, user_id: userID } = req.body;
-    const text = generateBody(url, userID);
+    let { response_url: responseUrl, user_id: userID } = req.body;
+    let text = generateBody(url, userID);
     postToChannel(responseUrl, text);
     res.json({ user: userID || "user", image: url})
     res.status(200).end();
