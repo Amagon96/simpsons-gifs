@@ -22,7 +22,7 @@ app.post('/get-gif', async (req, res) => {
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
     postToChannel(responseUrl, text);
-    console.log("response: ", res);
+
     return res.status(200).end();
   } catch (err) {
     console.error(err);
@@ -37,7 +37,8 @@ const getUrls = () => ([
 ]);
 
 const postToChannel = async (responseUrl, text) => {
-  return fetch(responseUrl, {
+  
+  let fetching = fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
         - "text" (required) which is the data that would be sent to Slack
@@ -49,6 +50,8 @@ const postToChannel = async (responseUrl, text) => {
     body: JSON.stringify({ text, response_type: 'in_channel' }),
     headers: { 'Content-Type': 'application/json' },
   });
+  console.log(fetching);
+  return fetching;
 }
 
 const generateBody = (url, userID) => {
