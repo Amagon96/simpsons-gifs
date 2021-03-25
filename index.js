@@ -12,9 +12,10 @@ app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 app.post('/show-gif', async (req, res) => {
   try {
     const urls = getUrls();
-    console.log("urls:", urls);
     const randomIndex = Math.floor(Math.random() * urls.length);
+    console.log("index: ", Math.floor(Math.random() * urls.length));
     const url = urls[randomIndex];
+    console.log("image: ", url);
 
     /* Slack slash commands have an invocation structure that includes:
         - response_url: a hook/url that a POST request can be sent to for sending, editing or deleting messages
@@ -23,8 +24,7 @@ app.post('/show-gif', async (req, res) => {
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
     postToChannel(responseUrl, text);
-    res.status(200).end();
-    return res;
+    return res.status(200).end();
   } catch (err) {
     console.error(err);
   }
