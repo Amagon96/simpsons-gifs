@@ -1,21 +1,19 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-
-app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser());
 
 // Home
 app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 
 // Endpoint that sends media to Slack
-app.post('/show-gif', async (req, res) => {
+app.post('/get-gif', async (req, res) => {
   try {
     const urls = getUrls();
     const randomIndex = Math.floor(Math.random() * urls.length);
-    console.log("index: ", Math.floor(Math.random() * urls.length));
     const url = urls[randomIndex];
-    console.log("image: ", url);
 
     /* Slack slash commands have an invocation structure that includes:
         - response_url: a hook/url that a POST request can be sent to for sending, editing or deleting messages
@@ -48,7 +46,7 @@ const postToChannel = async (responseUrl, text) => {
            It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
     */
     body: JSON.stringify({ text, response_type: 'in_channel' }),
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
