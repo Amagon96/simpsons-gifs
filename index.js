@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 
 // Endpoint that sends media to Slack
-app.post('/get-gif', async (req, res) => {
+app.post('/show-gif', async (req, res) => {
   try {
     const urls = getUrls();
     const randomIndex = Math.floor(Math.random() * urls.length);
