@@ -33,7 +33,8 @@ app.post('/show-gif', async (req, res) => {
 const getUrls = () => ([
   // urls where media files are hosted.
   'http://gph.is/22eazj7', //bartHappy
-  'http://gph.is/1feNC7w' //dancing
+  'http://gph.is/1feNC7w', //dancing
+  'http://gph.is/1QqltJ0' //nelson haha
 ]);
 
 const postToChannel = async (responseUrl, text) => {
