@@ -22,6 +22,7 @@ app.post('/get-gif', async (req, res) => {
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
     postToChannel(responseUrl, text);
+    console.log("response: ", res);
     return res.status(200).end();
   } catch (err) {
     console.error(err);
