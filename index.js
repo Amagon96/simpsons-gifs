@@ -22,7 +22,7 @@ app.post('/show-gif', async (req, res) => {
     let { response_url: responseUrl, user_id: userID } = req.body;
     let text = generateBody(url, userID);
     postToChannel(responseUrl, text);
-    res.json({ user: userID || "user", image: url})
+    res.json({ user: '<@${'+userID+'}>' || "user", image: url})
     res.status(200).end();
     return res;
   } catch (err) {
