@@ -27,6 +27,8 @@ function getRandomInt(max) {
 }
 
 const postToChannel = async (responseUrl, gif) => {
+  console.log("responseUrl: ", responseUrl);
+  console.log("gif: ", gif);
   return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
