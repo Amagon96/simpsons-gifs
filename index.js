@@ -40,7 +40,7 @@ const getUrls = () => ([
   'http://gph.is/1QqltJ0' //nelson haha
 ]);
 
-const publishMessage = () => {
+const publishMessage = async () => {
   const client = new WebClient("xoxb-your-token", {
     // LogLevel can be imported and used to make debugging simpler
     logLevel: LogLevel.DEBUG
