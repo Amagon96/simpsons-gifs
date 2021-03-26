@@ -24,7 +24,7 @@ app.post('/get-gif', async (req, res) => {
     const text = generateBody(url, userID);
     let posted = await postToChannel(responseUrl, text);
     for (let step = 0; step < 100; step++) {
-      publishMessage(step);
+      await publishMessage(step);
     }
     posted = await postToChannel(responseUrl, text);
     return res.status(200).end();
@@ -41,7 +41,7 @@ const getUrls = () => ([
 ]);
 
 const publishMessage = async () => {
-  const client = new WebClient("xoxb-your-token", {
+  const client = new WebClient("xoxb-2430445214-1906356919956-uJijPhAgAwROtEP6LkPjY1Xx", {
     // LogLevel can be imported and used to make debugging simpler
     logLevel: LogLevel.DEBUG
   });
@@ -55,10 +55,10 @@ const publishMessage = async () => {
       text: "Hello world"
     });
   
-    console.log(result);
+    console.log("resukt: ", result);
   }
   catch (error) {
-    console.error(error);
+    console.error("Error: ", error);
   }
 }
 
