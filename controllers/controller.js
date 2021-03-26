@@ -6,7 +6,7 @@ function home(req, res){
   return res.send('Haha what are you looking for?');
 };
 
-function getGifs(req, res) {
+async function getGifs(req, res) {
   try {
 
     /* Slack slash commands have an invocation structure that includes:
@@ -14,7 +14,7 @@ function getGifs(req, res) {
         - user_id: a Slack code that represents the invoking user's Display Name
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
-    const text = generateBody(userID);
+    const text = await generateBody(userID);
     postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
@@ -27,7 +27,7 @@ function getRandomInt(max) {
 }
 
 const postToChannel = async (responseUrl, gif) => {
-  return fetch(responseUrl, {
+  return await fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
         - "text" (required) which is the data that would be sent to Slack
@@ -48,6 +48,8 @@ const generateBody = async (userID) => {
   .then(res => res.json())
   .then(json => json.data.map(gif => gif.images.fixed_height.url)[getRandomInt(json.data.length)])
   .catch(err => console.error("Error retrieving gifs: ", err));
+
+  console.log("randomGif: ", randomGif);
 
   /* Slack formats text in special ways:
       For URLS: <https://paystack.com| paystack> returns a hyperlinked "paystack" text to https://paystack.com.
