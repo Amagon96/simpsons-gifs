@@ -22,11 +22,11 @@ app.post('/get-gif', async (req, res) => {
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
     const text = generateBody(url, userID);
-    let posted = await postToChannel(responseUrl, text);
+    postToChannel(responseUrl, text);
     for (let step = 0; step < 100; step++) {
-      await publishMessage(step);
+      postToChannel('', step)
     }
-    posted = await postToChannel(responseUrl, text);
+    postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
     console.error(err);
@@ -40,27 +40,6 @@ const getUrls = () => ([
   'http://gph.is/1QqltJ0' //nelson haha
 ]);
 
-const publishMessage = async () => {
-  const client = new WebClient("xoxb-2430445214-1906356919956-00BPoz5qdvfCoxvLK4BnWaoY", {
-    // LogLevel can be imported and used to make debugging simpler
-    logLevel: LogLevel.DEBUG
-  });
-  // ID of the channel you want to send the message to
-  const channelId = "DN11FUA5P";
-  
-  try {
-    // Call the chat.postMessage method using the WebClient
-    const result = await client.chat.postMessage({
-      channel: channelId,
-      text: "Hello world"
-    });
-  
-    console.log("resukt: ", result);
-  }
-  catch (error) {
-    console.error("Error: ", error);
-  }
-}
 
 const postToChannel = async (responseUrl, text) => {
   
