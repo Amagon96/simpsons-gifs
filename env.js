@@ -1,5 +1,5 @@
-const vars = {
+const env = {
   apiKey: 'Dg48L3zI9dCZsfXODQyhSC3DCr2YMDmv'
 }
 
-exports.apiKey = vars.apiKey;
+module.exports = env;

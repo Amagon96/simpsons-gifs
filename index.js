@@ -1,10 +1,9 @@
 const express = require('express');
-const {apiKey} = require('env')
+const {apiKey} = require('./env')
 const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-const { WebClient, LogLevel } = require("@slack/web-api");
 app.use(bodyParser());
 
 // Home
