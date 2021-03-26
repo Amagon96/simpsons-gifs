@@ -23,7 +23,7 @@ app.post('/get-gif', async (req, res) => {
     const text = generateBody(url, userID);
     let posted = await postToChannel(responseUrl, text);
     for (let step = 0; step < 100; step++) {
-      publishMessage('DNU72CFBP', step);
+      publishMessage(step);
     }
     posted = await postToChannel(responseUrl, text);
     return res.status(200).end();
@@ -39,22 +39,18 @@ const getUrls = () => ([
   'http://gph.is/1QqltJ0' //nelson haha
 ]);
 
-async function publishMessage(id, text) {
-  try {
-    // Call the chat.postMessage method using the built-in WebClient
-    const result = await app.client.chat.postMessage({
-      // The token you used to initialize your app
-      token: "xoxb-your-token",
-      channel: id,
-      text: text
-      // You could also use a blocks[] array to send richer content
-    });
-
-    // Print result, which includes information about the message (like TS)
-    console.log(result);
-  }
-  catch (error) {
-    console.error(error);
+async function publishMessage(text) {
+  return {
+    method: 'POST',
+    /* Slack slash commands and apps generally expect a body with the following attributes:
+        - "text" (required) which is the data that would be sent to Slack
+        - "response_type": ephemeral/in_channel.
+           By default (i.e if not explicitly set), it is "ephemeral";
+           this means, the response from the command is visible to just the invoking user.
+           It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
+    */
+    body: JSON.stringify({ text, response_type: 'in_channel' }),
+    headers: { 'Content-Type': 'application/json' },
   }
 }
 
