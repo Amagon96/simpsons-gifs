@@ -40,11 +40,7 @@ const getUrls = () => ([
 ]);
 
 const postComment = async(text) => {
-  return fetch(text, {
-    method: 'POST',
-    body: JSON.stringify({ text, response_type: 'in_channel' }),
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return text;
 }
 
 const postToChannel = async (responseUrl, text) => {
