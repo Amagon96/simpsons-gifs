@@ -42,8 +42,8 @@ const postToChannel = async (responseUrl, text) => {
   });
 }
 
-const generateBody = async (userID) => {
-  const randomGif = await fetch(apiUrl, {
+const generateBody = (userID) => {
+  const randomGif = fetch(apiUrl, {
     method: 'GET'
   })
   .then(res => res.json())
