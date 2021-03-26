@@ -46,7 +46,7 @@ const publishMessage = async () => {
     logLevel: LogLevel.DEBUG
   });
   // ID of the channel you want to send the message to
-  const channelId = "C01SGUBTA6P";
+  const channelId = "DN11FUA5P";
   
   try {
     // Call the chat.postMessage method using the WebClient
