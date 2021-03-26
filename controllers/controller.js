@@ -14,7 +14,7 @@ function getGifs(req, res) {
         - user_id: a Slack code that represents the invoking user's Display Name
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
-    const text = await generateBody(userID);
+    const text = generateBody(userID);
     postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
@@ -42,7 +42,7 @@ const postToChannel = async (responseUrl, gif) => {
 }
 
 const generateBody = async (userID) => {
-  const randomGif = fetch(apiUrl, {
+  const randomGif = await fetch(apiUrl, {
     method: 'GET'
   })
   .then(res => res.json())
