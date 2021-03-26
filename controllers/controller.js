@@ -14,7 +14,7 @@ function getGifs(req, res) {
         - user_id: a Slack code that represents the invoking user's Display Name
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
-    const text = generateBody(userID);
+    const text = await generateBody(userID);
     postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
@@ -27,7 +27,6 @@ function getRandomInt(max) {
 }
 
 const postToChannel = async (responseUrl, gif) => {
-  console.log("responseUrl: ", responseUrl);
   return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
@@ -43,13 +42,12 @@ const postToChannel = async (responseUrl, gif) => {
 }
 
 const generateBody = async (userID) => {
-  const randomGif = await fetch(apiUrl, {
+  const randomGif = fetch(apiUrl, {
     method: 'GET'
   })
   .then(res => res.json())
   .then(json => json.data.map(gif => gif.images.fixed_height.url)[getRandomInt(json.data.length)])
   .catch(err => console.error("Error retrieving gifs: ", err));
-  console.log("randomGif: ", randomGif);
 
   /* Slack formats text in special ways:
       For URLS: <https://paystack.com| paystack> returns a hyperlinked "paystack" text to https://paystack.com.
@@ -58,7 +56,6 @@ const generateBody = async (userID) => {
       Note: There is a user_name field but that can many times be different from the user's actual display name.
   */
   return `<${randomGif}| good job> by <@${userID}>`
-
 }
 
 module.exports = {
