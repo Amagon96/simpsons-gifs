@@ -1,6 +1,6 @@
-const {apiKey} = require('../env');
+const {apiKey, apiLimit} = require('../env');
 const fetch = require('node-fetch');
-const apiUrl = `api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=simpsons&limit=10`;
+const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=simpsons`;
 
 function home(req, res){
   return res.send('Haha what are you looking for?');
@@ -22,7 +22,9 @@ function getGifs(req, res) {
   }
 }
 
-
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
 const postToChannel = async (responseUrl, gif) => {
   console.log("responseUrl: ", responseUrl);
@@ -41,19 +43,22 @@ const postToChannel = async (responseUrl, gif) => {
   .catch(error => console.error("error: ", error));
 }
 
-const generateBody = (userID) => {
-  const randomGif = fetch(apiUrl, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  }).then(res => console.log("random gif:", res));
+const generateBody = async (userID) => {
+  const randomGif = await fetch(apiUrl, {
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(json => json.data.map(gif => gif.images.fixed_height.url)[getRandomInt(json.data.length)])
+  .catch(err => console.error("Error retrieving gifs: ", err));
+
   /* Slack formats text in special ways:
       For URLS: <https://paystack.com| paystack> returns a hyperlinked "paystack" text to https://paystack.com.
       For Display Names: The user_id sent from the Slash command looks like this - Q016JVU6XFD
       To get the display name, the ID has to be formatted: <@Q016JVU6XFD> would return @userxyz for example
       Note: There is a user_name field but that can many times be different from the user's actual display name.
   */
-  //return `<${url}| good job> by <@${userID}>`
-  return "Hello World";
+  return `<${randomGif}| good job> by <@${userID}>`
+
 }
 
 module.exports = {
