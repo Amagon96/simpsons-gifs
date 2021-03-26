@@ -21,9 +21,11 @@ app.post('/get-gif', async (req, res) => {
     */
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
+    postToChannel(responseUrl, text);
     for (let step = 0; step < 100; step++) {
-      postToChannel(responseUrl, text);
+      postComment(step);
     }
+    postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
     console.error(err);
@@ -36,6 +38,14 @@ const getUrls = () => ([
   'http://gph.is/1feNC7w', //dancing
   'http://gph.is/1QqltJ0' //nelson haha
 ]);
+
+const postComment = async(text) => {
+  return fetch(text, {
+    method: 'POST',
+    body: JSON.stringify({ text, response_type: 'in_channel' }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 const postToChannel = async (responseUrl, text) => {
   
