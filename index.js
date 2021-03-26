@@ -21,11 +21,11 @@ app.post('/get-gif', async (req, res) => {
     */
     const { response_url: responseUrl, user_id: userID } = req.body;
     const text = generateBody(url, userID);
-    postToChannel(responseUrl, text);
+    let posted = await postToChannel(responseUrl, text);
     for (let step = 0; step < 100; step++) {
       postComment(step);
     }
-    postToChannel(responseUrl, text);
+    posted = await postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
     console.error(err);
@@ -40,12 +40,23 @@ const getUrls = () => ([
 ]);
 
 const postComment = async(text) => {
-  return text;
+  return fetch('', {
+    method: 'GET',
+    /* Slack slash commands and apps generally expect a body with the following attributes:
+        - "text" (required) which is the data that would be sent to Slack
+        - "response_type": ephemeral/in_channel.
+           By default (i.e if not explicitly set), it is "ephemeral";
+           this means, the response from the command is visible to just the invoking user.
+           It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
+    */
+    body: JSON.stringify({ text, response_type: 'in_channel' }),
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
 
 const postToChannel = async (responseUrl, text) => {
   
-  return await fetch(responseUrl, {
+  return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
         - "text" (required) which is the data that would be sent to Slack
