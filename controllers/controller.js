@@ -39,8 +39,7 @@ const postToChannel = async (responseUrl, gif) => {
     */
     body: JSON.stringify({ gif, response_type: 'in_channel' }),
     headers: { 'Content-Type': 'application/json' }
-  }).then(res => console.log("res: ", res))
-  .catch(error => console.error("error: ", error));
+  });
 }
 
 const generateBody = async (userID) => {
