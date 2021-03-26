@@ -14,8 +14,7 @@ async function getGifs(req, res) {
         - user_id: a Slack code that represents the invoking user's Display Name
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
-    const text = await generateBody(userID);
-    postToChannel(responseUrl, text);
+    postToChannel(responseUrl, userID);
     return res.status(200).end();
   } catch (err) {
     console.error(err);
@@ -26,9 +25,8 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-const postToChannel = async (responseUrl, gif) => {
-  console.log("responseUrl: ", responseUrl);
-  console.log("gif: ", gif);
+const postToChannel = async (responseUrl, userID) => {
+  const gif = await generateBody(userID);
   return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
