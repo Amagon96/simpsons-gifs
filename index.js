@@ -1,4 +1,5 @@
 const express = require('express');
+const {apiKey} = require('env')
 const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
@@ -11,17 +12,16 @@ app.get('/', (req, res) => res.send('Haha what are you looking for?'));
 
 // Endpoint that sends media to Slack
 app.post('/get-gif', async (req, res) => {
+  const apiUrl = `api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=simpsons&limit=10`;
   try {
-    const urls = getUrls();
-    const randomIndex = Math.floor(Math.random() * urls.length);
-    const url = urls[randomIndex];
 
     /* Slack slash commands have an invocation structure that includes:
         - response_url: a hook/url that a POST request can be sent to for sending, editing or deleting messages
         - user_id: a Slack code that represents the invoking user's Display Name
     */
     const { response_url: responseUrl, user_id: userID,  } = req.body;
-    const text = generateBody(url, userID);
+    console.log(responseUrl);
+    const text = generateBody(apiUrl, userID);
     postToChannel(responseUrl, text);
     return res.status(200).end();
   } catch (err) {
@@ -29,15 +29,7 @@ app.post('/get-gif', async (req, res) => {
   }
 });
 
-const getUrls = () => ([
-  // urls where media files are hosted.
-  'http://gph.is/22eazj7', //bartHappy
-  'http://gph.is/1feNC7w', //dancing
-  'http://gph.is/1QqltJ0' //nelson haha
-]);
-
-
-const postToChannel = async (responseUrl, text) => {
+const postToChannel = async (responseUrl, gif) => {
   
   return fetch(responseUrl, {
     method: 'POST',
@@ -48,7 +40,7 @@ const postToChannel = async (responseUrl, text) => {
            this means, the response from the command is visible to just the invoking user.
            It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
     */
-    body: JSON.stringify({ text, response_type: 'in_channel' }),
+    body: JSON.stringify({ text: "hello world", response_type: 'in_channel' }),
     headers: { 'Content-Type': 'application/json' },
   });
 }
