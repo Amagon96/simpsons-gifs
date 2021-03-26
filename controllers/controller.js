@@ -26,7 +26,8 @@ function getRandomInt(max) {
 }
 
 const postToChannel = async (responseUrl, userID) => {
-  const gif = await generateBody(userID);
+  //const gif = await generateBody(userID);
+  const text = `<https://media2.giphy.com/media/9QUhxrq9uRFWU/200.gif?cid=7af8ad5djhmiyjnds68f1u46r0ibdmiqz6d3bf7nmd0ituav&rid=200.gif>| good job> by <@${userID}>`
   return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
@@ -36,7 +37,7 @@ const postToChannel = async (responseUrl, userID) => {
            this means, the response from the command is visible to just the invoking user.
            It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
     */
-    body: JSON.stringify({ gif, response_type: 'in_channel' }),
+    body: JSON.stringify({ text, response_type: 'in_channel' }),
     headers: { 'Content-Type': 'application/json' }
   });
 }
