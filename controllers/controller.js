@@ -26,8 +26,8 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-const postToChannel = async (responseUrl, text) => {
-  console.log("text: ", text);
+const postToChannel = async (responseUrl, gif) => {
+  console.log("responseUrl: ", responseUrl);
   return fetch(responseUrl, {
     method: 'POST',
     /* Slack slash commands and apps generally expect a body with the following attributes:
@@ -37,18 +37,19 @@ const postToChannel = async (responseUrl, text) => {
            this means, the response from the command is visible to just the invoking user.
            It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
     */
-    body: JSON.stringify({ text, response_type: 'in_channel' }),
+    body: JSON.stringify({ gif, response_type: 'in_channel' }),
     headers: { 'Content-Type': 'application/json' }
   });
 }
 
-const generateBody = (userID) => {
-  const randomGif = fetch(apiUrl, {
+const generateBody = async (userID) => {
+  const randomGif = await fetch(apiUrl, {
     method: 'GET'
   })
   .then(res => res.json())
   .then(json => json.data.map(gif => gif.images.fixed_height.url)[getRandomInt(json.data.length)])
   .catch(err => console.error("Error retrieving gifs: ", err));
+  console.log("randomGif: ", randomGif);
 
   /* Slack formats text in special ways:
       For URLS: <https://paystack.com| paystack> returns a hyperlinked "paystack" text to https://paystack.com.
