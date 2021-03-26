@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
+const { WebClient, LogLevel } = require("@slack/web-api");
 app.use(bodyParser());
 
 // Home
@@ -39,18 +40,25 @@ const getUrls = () => ([
   'http://gph.is/1QqltJ0' //nelson haha
 ]);
 
-async function publishMessage(text) {
-  return {
-    method: 'POST',
-    /* Slack slash commands and apps generally expect a body with the following attributes:
-        - "text" (required) which is the data that would be sent to Slack
-        - "response_type": ephemeral/in_channel.
-           By default (i.e if not explicitly set), it is "ephemeral";
-           this means, the response from the command is visible to just the invoking user.
-           It can also be set to "in_channel" which means the response from the command is visible in whatever channel it is invoked.      
-    */
-    body: JSON.stringify({ text, response_type: 'in_channel' }),
-    headers: { 'Content-Type': 'application/json' },
+const publishMessage = () => {
+  const client = new WebClient("xoxb-your-token", {
+    // LogLevel can be imported and used to make debugging simpler
+    logLevel: LogLevel.DEBUG
+  });
+  // ID of the channel you want to send the message to
+  const channelId = "C01SGUBTA6P";
+  
+  try {
+    // Call the chat.postMessage method using the WebClient
+    const result = await client.chat.postMessage({
+      channel: channelId,
+      text: "Hello world"
+    });
+  
+    console.log(result);
+  }
+  catch (error) {
+    console.error(error);
   }
 }
 
