@@ -41,7 +41,7 @@ const getUrls = () => ([
 ]);
 
 const publishMessage = async () => {
-  const client = new WebClient("xoxb-2430445214-1906356919956-uJijPhAgAwROtEP6LkPjY1Xx", {
+  const client = new WebClient("xoxb-2430445214-1906356919956-00BPoz5qdvfCoxvLK4BnWaoY", {
     // LogLevel can be imported and used to make debugging simpler
     logLevel: LogLevel.DEBUG
   });
